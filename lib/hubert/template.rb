@@ -11,9 +11,19 @@ module Hubert
     end
 
     def render(ctx = {})
-      @compiled.map { |segment|
+      path = @compiled.map do |segment|
         segment.kind_of?(Symbol) ? (ctx[segment] || '') : segment
-      }.join('')
+      end
+      .join('')
+
+      query = @placeholders.reduce(ctx) { |ctx, key| ctx.delete(key); ctx }
+
+
+      query_string =  query.map {|key, value| "#{key}=#{value}"} * '&'
+
+      path.tap do |p|
+        p << '?' + query_string unless query_string.empty?
+      end
     end
 
     private

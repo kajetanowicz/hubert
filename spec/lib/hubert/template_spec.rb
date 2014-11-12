@@ -44,6 +44,20 @@ module Hubert
           )
         end
       end
+
+      context 'when hash contains additional values' do
+        subject do
+          template.render(parent_id: 10, id: 512, sort: 'name', order: 'asc')
+        end
+
+        let(:path) do
+          'a/path/:parent_id/:id/'
+        end
+
+        it 'builds a query string' do
+          expect(subject).to eq('/a/path/10/512?sort=name&order=asc')
+        end
+      end
     end
   end
 end
