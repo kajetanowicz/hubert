@@ -45,7 +45,7 @@ module Hubert
         end
       end
 
-      context 'when hash contains additional values' do
+      context 'when hash contains additional keys' do
         subject do
           template.render(parent_id: 10, id: 512, sort: 'name', order: 'asc')
         end
@@ -56,6 +56,20 @@ module Hubert
 
         it 'builds a query string' do
           expect(subject).to eq('/a/path/10/512?sort=name&order=asc')
+        end
+      end
+
+      context 'when unable to find a placeholder substitution' do
+        subject do
+          template.render(id: 123)
+        end
+
+        let(:path) do
+          'a/path/:id/:name'
+        end
+
+        it 'raises an exception' do
+          expect { subject }.to raise_error(Template::KeyNotFound, /\[name\]/)
         end
       end
     end
