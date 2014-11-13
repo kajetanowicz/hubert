@@ -88,6 +88,20 @@ module Hubert
           )
         end
       end
+
+      context 'when segments contain illegal characters' do
+        subject do
+          template.render(what: 'all the things', who: 'a boss')
+        end
+
+        let(:path) do
+          'escape/:what/like/:who'
+        end
+
+        it 'escapes all illegal characters' do
+          expect(subject).to eq('/escape/all+the+things/like/a+boss')
+        end
+      end
     end
   end
 end

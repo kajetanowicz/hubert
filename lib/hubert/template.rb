@@ -15,7 +15,7 @@ module Hubert
       context = Context.new(ctx)
 
       path = @compiled.map do |segment|
-        segment.kind_of?(Symbol) ? context.lookup(segment) : segment
+        segment.kind_of?(Symbol) ? escape(context.lookup(segment)) : segment
       end
       .join('')
 
