@@ -7,3 +7,9 @@ begin
   task default: :spec
 rescue LoadError
 end
+
+task :benchmark do
+  Dir['benchmark/**/*.rb'].each do |benchmark|
+    sh 'ruby', benchmark
+  end
+end
