@@ -1,3 +1,5 @@
+require 'cgi'
+
 module Hubert
   class Template
     PH = /:[a-zA-Z_]+/
@@ -17,7 +19,7 @@ module Hubert
       end
       .join('')
 
-      query = context.unused.map {|key, value| "#{key}=#{value}"} * '&'
+      query = context.unused.map {|key, value| "#{escape(key)}=#{escape(value)}"} * '&'
 
       path.tap do |p|
         p << '?' + query unless query.empty?
@@ -49,6 +51,10 @@ module Hubert
         break if placeholder.empty?
         @compiled << placeholder[1..-1].to_sym
       end
+    end
+
+    def escape(stringish)
+      CGI.escape(stringish.to_s)
     end
   end
 end

@@ -72,6 +72,22 @@ module Hubert
           expect { subject }.to raise_error(Template::KeyNotFound, /\[name\]/)
         end
       end
+
+      context 'when query string contains characters that are not allowed' do
+        subject do
+          template.render(escape: 'all the things', like: 'a boss!!')
+        end
+
+        let(:path) do
+          'a/path/without/placeholders'
+        end
+
+        it 'escapes all illegal characters' do
+          expect(subject).to eq(
+            '/a/path/without/placeholders?escape=all+the+things&like=a+boss%21%21'
+          )
+        end
+      end
     end
   end
 end
