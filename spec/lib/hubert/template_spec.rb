@@ -29,7 +29,7 @@ module Hubert
         expect(subject[-1]).not_to eq('/')
       end
 
-      context 'when path contains placehlders' do
+      context 'when path contains placeholders' do
         subject do
           template.render(name: 'test', id: 1234)
         end

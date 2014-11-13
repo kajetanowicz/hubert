@@ -1,8 +1,11 @@
-require 'cgi'
+require 'forwardable'
 
 module Hubert
   class Template
     PH = /:[a-zA-Z_]+/
+
+    extend Forwardable
+    def_delegator :@compiled, :map
 
     def initialize(template)
       @template = template
@@ -12,18 +15,7 @@ module Hubert
     end
 
     def render(ctx = {})
-      context = Context.new(ctx)
-
-      path = @compiled.map do |segment|
-        segment.kind_of?(Symbol) ? escape(context.lookup(segment)) : segment
-      end
-      .join('')
-
-      query = context.unused.map {|key, value| "#{escape(key)}=#{escape(value)}"} * '&'
-
-      path.tap do |p|
-        p << '?' + query unless query.empty?
-      end
+      Renderer.new(self, ctx).render
     end
 
     private
@@ -51,10 +43,6 @@ module Hubert
         break if placeholder.empty?
         @compiled << placeholder[1..-1].to_sym
       end
-    end
-
-    def escape(stringish)
-      CGI.escape(stringish.to_s)
     end
   end
 end
