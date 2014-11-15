@@ -5,6 +5,7 @@ module Hubert
   InvalidProtocol = Class.new(StandardError)
 
   class Builder
+    DEFAULT_PORTS = { 'http' => '80', 'https' => '443' }
 
     attr_reader :protocol, :host, :path_prefix
 
@@ -42,6 +43,14 @@ module Hubert
       path = path[1..-1] if path.start_with?('/')
 
       @path_prefix = path
+    end
+
+    def port
+      @port ||= DEFAULT_PORTS.fetch(protocol, '80')
+    end
+
+    def port=(port)
+      @port = port.to_s
     end
   end
 end

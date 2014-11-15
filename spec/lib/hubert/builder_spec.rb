@@ -68,5 +68,35 @@ module Hubert
         expect(builder.path_prefix).to eq('foo/bar/baz')
       end
     end
+
+    describe '#port' do
+      it 'returns default HTTP port (80)' do
+        expect(builder.port).to eq('80')
+      end
+
+      context 'when using HTTPS' do
+        it 'returns the default HTTPS port (443)' do
+          builder.https!
+
+          expect(builder.port).to eq('443')
+        end
+      end
+
+      context 'when using HTTP' do
+        it 'returns the default HTTP port (80)' do
+          builder.http!
+
+          expect(builder.port).to eq('80')
+        end
+      end
+    end
+
+    describe '#port=' do
+      it 'assings port' do
+        builder.port = 123
+
+        expect(builder.port).to eq('123')
+      end
+    end
   end
 end
