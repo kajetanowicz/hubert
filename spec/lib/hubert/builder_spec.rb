@@ -37,15 +37,35 @@ module Hubert
 
     describe '#host=' do
       it 'assigns the host' do
-        builder.host = 'http://example.com/'
+        builder.host = 'example.com'
 
         expect(builder.host).to eq('example.com')
       end
 
-      it 'removes a path from the host' do
+      it 'removes the path component from the host' do
+        builder.host = 'example.com/path/to/resource'
+
+        expect(builder.host).to eq('example.com')
+      end
+
+      it 'removes the protocol component from the host' do
         builder.host = 'http://example.com/path/to/resource'
 
         expect(builder.host).to eq('example.com')
+      end
+    end
+
+    describe '#path_prefix' do
+      it 'assigns the path prefix' do
+        builder.path_prefix = 'foo/bar/baz'
+
+        expect(builder.path_prefix).to eq('foo/bar/baz')
+      end
+
+      it 'removes slashes from the begining and the end of the path' do
+        builder.path_prefix = '/foo/bar/baz/'
+
+        expect(builder.path_prefix).to eq('foo/bar/baz')
       end
     end
   end
