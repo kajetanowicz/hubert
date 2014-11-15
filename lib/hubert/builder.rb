@@ -14,8 +14,9 @@ module Hubert
     end
 
     def protocol=(protocol)
+      protocol = protocol.to_s unless protocol.is_a?(String)
       protocol.strip!
-      if protocol =~ /(http)|(HTTP)/i
+      if protocol =~ /(http)|(https)/i
         @protocol = protocol.downcase
       else
         fail InvalidProtocol, "Provided protocol: [#{protocol}] is invalid"

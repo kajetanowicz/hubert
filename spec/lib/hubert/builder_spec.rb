@@ -17,6 +17,14 @@ module Hubert
         expect { builder.protocol = 'ftp' }.
           to raise_error(InvalidProtocol, /\[ftp\]/)
       end
+
+      context 'when passed as a symbol' do
+        it 'converts protocol to a String' do
+          builder.protocol = :http
+
+          expect(builder.protocol).to eq('http')
+        end
+      end
     end
 
     describe '#http!' do
