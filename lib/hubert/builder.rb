@@ -1,9 +1,6 @@
 require 'uri'
 
 module Hubert
-
-  InvalidProtocol = Class.new(StandardError)
-
   class Builder
     DEFAULT_PORTS = { 'http' => '80', 'https' => '443' }
 

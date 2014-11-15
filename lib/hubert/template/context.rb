@@ -1,8 +1,5 @@
 module Hubert
   class Template
-
-    KeyNotFound = Class.new(StandardError)
-
     class Context
       def initialize(ctx = {})
         @context = ctx

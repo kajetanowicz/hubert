@@ -69,7 +69,7 @@ module Hubert
         end
 
         it 'raises an exception' do
-          expect { subject }.to raise_error(Template::KeyNotFound, /\[name\]/)
+          expect { subject }.to raise_error(KeyNotFound, /\[name\]/)
         end
       end
 
