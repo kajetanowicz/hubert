@@ -7,7 +7,18 @@ module Hubert
     attr_reader :protocol, :host, :path_prefix
 
     def initialize
+      @templates = {}
       yield(self) if block_given?
+    end
+
+    def path(template, context = {})
+      templates(template).render(context)
+    end
+
+    def templates(name)
+      @templates.fetch(name) do
+        @templates[name] = Template.new(name)
+      end
     end
 
     def protocol=(protocol)

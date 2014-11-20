@@ -6,6 +6,25 @@ module Hubert
       Builder.new
     end
 
+    describe '#path' do
+      it 'renders a path' do
+        expect(builder.path('/foo/bar')).to eq('/foo/bar')
+      end
+
+      it 'replaces placehlders with values' do
+        expect(
+          builder.path('create/:id/some/:name', id: 11, name: 'example')
+        ).to eq('/create/11/some/example')
+      end
+
+      it 'caches templates' do
+        expect(Template).to receive(:new).with('/path/to/resource/:id').once.and_call_original
+
+        builder.path('/path/to/resource/:id', id: 11)
+        builder.path('/path/to/resource/:id', id: 12)
+      end
+    end
+
     describe '#protocol=' do
       it 'assigns the protocol' do
         builder.protocol = 'HTTP'
