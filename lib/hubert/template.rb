@@ -26,12 +26,12 @@ module Hubert
     end
 
     def normalize_template!
-      suffix = @template
-        .split('/')
-        .delete_if(&:empty?)
-        .join('/')
+      path = @template
 
-      @template = '/' + suffix
+      path = path[0..-2] if path.end_with?('/')
+      path = path[1..-1] if path.start_with?('/')
+
+      @template = '/' + path
     end
 
     def extract_placeholders!
