@@ -25,6 +25,26 @@ module Hubert
       end
     end
 
+    describe '#url' do
+      let(:builder) do
+        Builder.new do |b|
+          b.http!
+          b.host = 'example.com'
+          b.port = 80
+          b.path_prefix = 'api'
+        end
+      end
+
+      it 'returns full URL' do
+        expect(builder.url('/path/to/resource/:id', id: 11, sort: 'name'))
+          .to eq('http://example.com:80/api/path/to/resource/11?sort=name')
+      end
+
+      it 'attaches non default port number' do
+
+      end
+    end
+
     describe '#protocol=' do
       it 'assigns the protocol' do
         builder.protocol = 'HTTP'
@@ -86,13 +106,13 @@ module Hubert
       it 'assigns the path prefix' do
         builder.path_prefix = 'foo/bar/baz'
 
-        expect(builder.path_prefix).to eq('foo/bar/baz')
+        expect(builder.path_prefix).to eq('/foo/bar/baz')
       end
 
-      it 'removes slashes from the begining and the end of the path' do
+      it 'removes slashes from the end of the path' do
         builder.path_prefix = '/foo/bar/baz/'
 
-        expect(builder.path_prefix).to eq('foo/bar/baz')
+        expect(builder.path_prefix).to eq('/foo/bar/baz')
       end
     end
 

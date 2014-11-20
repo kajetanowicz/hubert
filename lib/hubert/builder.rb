@@ -15,6 +15,10 @@ module Hubert
       templates(template).render(context)
     end
 
+    def url(template, context = {})
+      "#{protocol}://#{host}:#{port}#{path_prefix}#{path(template, context)}"
+    end
+
     def templates(name)
       @templates.fetch(name) do
         @templates[name] = Template.new(name)
@@ -51,7 +55,7 @@ module Hubert
       path = path[0..-2] if path.end_with?('/')
       path = path[1..-1] if path.start_with?('/')
 
-      @path_prefix = path
+      @path_prefix = '/' + path
     end
 
     def port
