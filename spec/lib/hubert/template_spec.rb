@@ -25,7 +25,7 @@ module Hubert
         expect(subject).to match(/^\/[^\/]/)
       end
 
-      it 'removes fillowing slash from the path' do
+      it 'removes following slash from the path' do
         expect(subject[-1]).not_to eq('/')
       end
 

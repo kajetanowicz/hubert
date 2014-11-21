@@ -11,7 +11,7 @@ module Hubert
         expect(builder.path('/foo/bar')).to eq('/foo/bar')
       end
 
-      it 'replaces placehlders with values' do
+      it 'replaces placeholders with values' do
         expect(
           builder.path('create/:id/some/:name', id: 11, name: 'example')
         ).to eq('/create/11/some/example')
