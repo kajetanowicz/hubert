@@ -16,7 +16,10 @@ module Hubert
     end
 
     def url(template, context = {})
-      "#{protocol}://#{host}:#{port}#{path_prefix}#{path(template, context)}"
+      url = "#{protocol}://#{host}"
+      url << ":#{port}" unless DEFAULT_PORTS.fetch(protocol) == port
+      url << "#{path_prefix}#{path(template, context)}"
+      url
     end
 
     def templates(name)

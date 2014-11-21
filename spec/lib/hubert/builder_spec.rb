@@ -30,18 +30,25 @@ module Hubert
         Builder.new do |b|
           b.http!
           b.host = 'example.com'
-          b.port = 80
+          b.port = port
           b.path_prefix = 'api'
         end
       end
 
+      let(:port) { 80 }
+
       it 'returns full URL' do
         expect(builder.url('/path/to/resource/:id', id: 11, sort: 'name'))
-          .to eq('http://example.com:80/api/path/to/resource/11?sort=name')
+          .to eq('http://example.com/api/path/to/resource/11?sort=name')
       end
 
-      it 'attaches non default port number' do
+      context 'when using non-default port number' do
+        let(:port) { 8080 }
 
+        it 'creates an url with port number' do
+          expect(builder.url('/path/to/resource/:id', id: 11, sort: 'name'))
+            .to eq('http://example.com:8080/api/path/to/resource/11?sort=name')
+        end
       end
     end
 
