@@ -50,6 +50,27 @@ module Hubert
             .to eq('http://example.com:8080/api/path/to/resource/11?sort=name')
         end
       end
+
+      context 'when protocol is not set' do
+        let(:builder) do
+          Builder.new do |b|
+            b.host = 'example.com'
+          end
+        end
+
+        it 'uses default http protocol' do
+          expect(builder.url('/path/to/resource'))
+            .to eq('http://example.com/path/to/resource')
+        end
+      end
+
+      context 'when domain is not set' do
+        let(:builder) { Builder.new }
+
+        it 'raises an exception' do
+          expect { builder.url('/path') }.to raise_error(HostNotSet)
+        end
+      end
     end
 
     describe '#protocol=' do

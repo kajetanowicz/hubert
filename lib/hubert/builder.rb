@@ -4,7 +4,7 @@ module Hubert
   class Builder
     DEFAULT_PORTS = { 'http' => '80', 'https' => '443' }
 
-    attr_reader :protocol, :host, :path_prefix
+    attr_reader :host
 
     def initialize
       @templates = {}
@@ -16,10 +16,15 @@ module Hubert
     end
 
     def url(template, context = {})
-      url = "#{protocol}://#{host}"
-      url << ":#{port}" unless DEFAULT_PORTS.fetch(protocol) == port
-      url << "#{path_prefix}#{path(template, context)}"
-      url
+      fail HostNotSet, 'Unable to generate URL without host' if host.nil?
+
+      String.new.tap do|url|
+        url <<  protocol + '://'
+        url << host
+        url << ':' + port unless DEFAULT_PORTS.fetch(protocol) == port
+        url << path_prefix
+        url << path(template, context)
+      end
     end
 
     def templates(name)
@@ -36,6 +41,10 @@ module Hubert
       else
         fail InvalidProtocol, "Provided protocol: [#{protocol}] is invalid"
       end
+    end
+
+    def protocol
+      @protocol ||= 'http'
     end
 
     def http!
@@ -59,6 +68,10 @@ module Hubert
       path = path[1..-1] if path.start_with?('/')
 
       @path_prefix = '/' + path
+    end
+
+    def path_prefix
+      @path_prefix ||= ''
     end
 
     def port
