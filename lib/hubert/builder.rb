@@ -1,10 +1,14 @@
-require 'uri'
+require 'forwardable'
 
 module Hubert
   class Builder
-    DEFAULT_PORTS = { 'http' => '80', 'https' => '443' }
+    extend Forwardable
 
-    attr_reader :host
+    def_delegators :components, :protocol=, :protocol
+    def_delegators :components, :host=, :host
+    def_delegators :components, :path_prefix=, :path_prefix
+    def_delegators :components, :port=, :port
+    def_delegators :components, :http!, :https!
 
     def initialize
       @templates = {}
@@ -21,7 +25,7 @@ module Hubert
       String.new.tap do|url|
         url <<  protocol + '://'
         url << host
-        url << ':' + port unless DEFAULT_PORTS.fetch(protocol) == port
+        url << ':' + port unless components.default_port?
         url << path_prefix
         url << path(template, context)
       end
@@ -33,53 +37,10 @@ module Hubert
       end
     end
 
-    def protocol=(protocol)
-      protocol = protocol.to_s unless protocol.is_a?(String)
-      protocol.strip!
-      if protocol =~ /(http)|(https)/i
-        @protocol = protocol.downcase
-      else
-        fail InvalidProtocol, "Provided protocol: [#{protocol}] is invalid"
-      end
-    end
+    private
 
-    def protocol
-      @protocol ||= 'http'
-    end
-
-    def http!
-      @protocol = 'http'
-    end
-
-    def https!
-      @protocol = 'https'
-    end
-
-    def host=(host)
-      host.strip!
-      host = 'http://' + host if URI.parse(host).scheme.nil?
-      @host = URI.parse(host).host
-    end
-
-    def path_prefix=(path)
-      path.strip!
-      path = URI.parse(path).path
-      path = path[0..-2] if path.end_with?('/')
-      path = path[1..-1] if path.start_with?('/')
-
-      @path_prefix = '/' + path
-    end
-
-    def path_prefix
-      @path_prefix ||= ''
-    end
-
-    def port
-      @port ||= DEFAULT_PORTS.fetch(protocol, '80')
-    end
-
-    def port=(port)
-      @port = port.to_s
+    def components
+      @components ||= Components.new
     end
   end
 end
