@@ -18,6 +18,10 @@ module Hubert
       Renderer.new(self, ctx).render
     end
 
+    def placeholders
+      @compiled.select { |segment| segment.is_a?(Symbol) }
+    end
+
     private
 
     def compile!

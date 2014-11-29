@@ -10,6 +10,18 @@ module Hubert
       '/first/second/third/'
     end
 
+    describe '#placeholders' do
+      subject { template.placeholders }
+
+      let(:path) do
+        'simple/:path/:with/some/:placeholders'
+      end
+
+      it' returns a list of placeholders' do
+        expect(subject).to eq([:path, :with, :placeholders])
+      end
+    end
+
     describe '#render' do
       subject { template.render({}) }
 
