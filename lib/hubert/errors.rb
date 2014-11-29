@@ -6,4 +6,6 @@ module Hubert
   InvalidProtocol = Class.new(HubertError)
 
   HostNotSet = Class.new(HubertError)
+
+  PathAliasNotSet = Class.new(HubertError)
 end
