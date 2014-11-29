@@ -21,6 +21,31 @@ module Hubert
         expect(example_class.new).to respond_to(:get_items_path)
       end
 
+      context 'when calling created added method' do
+        subject do
+          instance.get_items_path('foo', 1234, sort: 'name', order: 'desc')
+        end
+
+        let(:instance) do
+          example_class.new
+        end
+
+        it 'builds path by passing hash' do
+          pending
+          fail
+          expect(subject).to eq('/some/foo/path/1234?sort=name&order=desc')
+        end
+
+        it 'builds path by passing individual segmants' do
+          expect(subject).to eq('/some/foo/path/1234?sort=name&order=desc')
+        end
+
+        it 'raises error when passes incomplete list of substitutions' do
+          expect { instance.get_items_path('foo', sort: 'name', order: 'desc') }.
+            to raise_error(ArgumentError, /(1 for 2..3)/)
+        end
+      end
+
       context 'when :as key is not present' do
         it 'raises an exception' do
           expect {
