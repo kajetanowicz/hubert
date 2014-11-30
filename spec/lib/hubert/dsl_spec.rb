@@ -21,28 +21,17 @@ module Hubert
         expect(example_class.new).to respond_to(:get_items_path)
       end
 
-      context 'when calling created added method' do
+      context 'when calling new method' do
         subject do
-          instance.get_items_path('foo', 1234, sort: 'name', order: 'desc')
+          instance.get_items_path(simple: 'foo', id: 1234, sort: 'name', order: 'desc')
         end
 
         let(:instance) do
           example_class.new
         end
 
-        it 'builds path by passing hash' do
-          pending
-          fail
+        it 'builds path using passed Hash' do
           expect(subject).to eq('/some/foo/path/1234?sort=name&order=desc')
-        end
-
-        it 'builds path by passing individual segmants' do
-          expect(subject).to eq('/some/foo/path/1234?sort=name&order=desc')
-        end
-
-        it 'raises error when passes incomplete list of substitutions' do
-          expect { instance.get_items_path('foo', sort: 'name', order: 'desc') }.
-            to raise_error(ArgumentError, /(1 for 2..3)/)
         end
       end
 
