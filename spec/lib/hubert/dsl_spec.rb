@@ -6,8 +6,10 @@ module Hubert
       Class.new { extend DSL }
     end
 
-    it 'adds "path" method' do
-      expect(example_class).to respond_to(:path)
+    %w( path url http! https! port host path_prefix ).each do |method|
+      it "adds '#{method}' method to the host class" do
+        expect(example_class).to respond_to(method)
+      end
     end
 
     describe '.path' do

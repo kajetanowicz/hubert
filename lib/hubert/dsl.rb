@@ -12,7 +12,6 @@ module Hubert
       end
     end
 
-
     def path(path, options = {})
       unless options.key?(:as)
         fail PathAliasNotSet, 'Please specify ":as" options when calling path method'
@@ -25,6 +24,22 @@ module Hubert
       end
     end
 
+    def url(path, options = {})
+    end
 
+    def http!
+    end
+
+    def https!
+    end
+
+    def host(host)
+    end
+
+    def port(port)
+    end
+
+    def path_prefix(path_prefix)
+    end
   end
 end
