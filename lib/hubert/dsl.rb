@@ -1,16 +1,14 @@
 module Hubert
   module DSL
     class << self
-      def extended(klass)
-        builders[klass] = Builder.new
-      end
-
       def builders
         @builder ||= {}
       end
 
       def builder_for(klass)
-        builders.fetch(klass)
+        builders.fetch(klass) do
+          builders[klass] = Builder.new
+        end
       end
     end
 
@@ -26,5 +24,7 @@ module Hubert
         DSL.builder_for(self.class).path(path, ctx)
       end
     end
+
+
   end
 end
