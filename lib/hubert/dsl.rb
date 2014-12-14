@@ -25,6 +25,15 @@ module Hubert
     end
 
     def url(path, options = {})
+      unless options.key?(:as)
+        fail PathAliasNotSet, 'Please specify ":as" options when calling url method'
+      end
+
+      method_name = "#{options[:as]}_url"
+
+      define_method(method_name) do |ctx = {}|
+        DSL.builder_for(self.class).url(path, ctx)
+      end
     end
 
     def http!
@@ -34,6 +43,7 @@ module Hubert
     end
 
     def host(host)
+      DSL.builder_for(self).host = host
     end
 
     def port(port)

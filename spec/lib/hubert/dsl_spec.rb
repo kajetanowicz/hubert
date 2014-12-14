@@ -47,5 +47,44 @@ module Hubert
         end
       end
     end
+
+    describe '.url' do
+      before do
+        example_class.class_eval do
+          url 'some/:simple/path/:id', as: :get_items
+        end
+      end
+
+      it 'defines *_url method on any instance of the class' do
+        expect(example_class.new).to respond_to(:get_items_url)
+      end
+
+      describe 'defined method' do
+        context 'when host is not specified' do
+          it 'raises an exception' do
+            expect { example_class.new.get_items_url }
+              .to raise_error(HostNotSet)
+          end
+        end
+
+        context 'when host is specified' do
+          before do
+            example_class.class_eval do
+              host 'example.com'
+              url 'some/:simple/path/:id', as: :get_items
+            end
+          end
+
+          it 'returns a url' do
+            expect(example_class.new.get_items_url(simple: 'foo', id: 'bar'))
+              .to eq('http://example.com/some/foo/path/bar') 
+          end
+
+          it 'uses path segments defined on class level' do
+
+          end
+        end
+      end
+    end
   end
 end
