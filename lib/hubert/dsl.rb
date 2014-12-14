@@ -1,59 +1,60 @@
 module Hubert
   module DSL
-    class << self
-      def builders
-        @builder ||= {}
+
+    class MethodDefiner
+      def initialize(klass)
+        @klass = klass
       end
 
-      def builder_for(klass)
-        builders.fetch(klass) do
-          builders[klass] = Builder.new
+      def define(method, path, options)
+        ensure_alias!(options, method)
+
+        @klass.class_eval <<-RUBY, __FILE__, __LINE__ + 1
+          def #{options[:as]}_#{method}(ctx = {})                  # def get_items_path(ctx = {})
+            self.class._hubert_builder.#{method}('#{path}', ctx)   #    self.class._hubert_builder.url('some/:interesting/path:id', ctx)
+          end                                                      # end
+        RUBY
+      end
+
+      private
+
+      def ensure_alias!(options, method)
+        if options.fetch(:as, '') =~ /^\s*$/
+          fail AliasNotSet, "Please specify ':as' option when defining new #{method}"
         end
       end
     end
 
     def path(path, options = {})
-      unless options.key?(:as)
-        fail PathAliasNotSet, 'Please specify ":as" options when calling path method'
-      end
-
-      method_name = "#{options[:as]}_path"
-
-      define_method(method_name) do |ctx = {}|
-        DSL.builder_for(self.class).path(path, ctx)
-      end
+      MethodDefiner.new(self).define(:path, path, options)
     end
 
     def url(path, options = {})
-      unless options.key?(:as)
-        fail PathAliasNotSet, 'Please specify ":as" options when calling url method'
-      end
-
-      method_name = "#{options[:as]}_url"
-
-      define_method(method_name) do |ctx = {}|
-        DSL.builder_for(self.class).url(path, ctx)
-      end
+      MethodDefiner.new(self).define(:url, path, options)
     end
 
     def http!
-      DSL.builder_for(self).http!
+      _hubert_builder.http!
     end
 
     def https!
-      DSL.builder_for(self).https!
+      _hubert_builder.https!
     end
 
     def host(host)
-      DSL.builder_for(self).host = host
+      _hubert_builder.host = host
     end
 
     def port(port)
-      DSL.builder_for(self).port = port
+      _hubert_builder.port = port
     end
 
     def path_prefix(path_prefix)
-      DSL.builder_for(self).path_prefix = path_prefix
+      _hubert_builder.path_prefix = path_prefix
+    end
+
+    def _hubert_builder
+      @_hubert_builder ||= Builder.new
     end
   end
 end

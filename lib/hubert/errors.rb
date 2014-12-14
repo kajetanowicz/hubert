@@ -7,5 +7,5 @@ module Hubert
 
   HostNotSet = Class.new(HubertError)
 
-  PathAliasNotSet = Class.new(HubertError)
+ AliasNotSet = Class.new(HubertError)
 end

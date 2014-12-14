@@ -43,7 +43,7 @@ module Hubert
             example_class.class_eval do
               path 'some/:simple/path/:id'
             end
-          }.to raise_error(PathAliasNotSet, /:as/)
+          }.to raise_error(AliasNotSet, /:as/)
         end
       end
     end
