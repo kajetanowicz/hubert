@@ -37,9 +37,11 @@ module Hubert
     end
 
     def http!
+      DSL.builder_for(self).http!
     end
 
     def https!
+      DSL.builder_for(self).https!
     end
 
     def host(host)
@@ -47,9 +49,11 @@ module Hubert
     end
 
     def port(port)
+      DSL.builder_for(self).port = port
     end
 
     def path_prefix(path_prefix)
+      DSL.builder_for(self).path_prefix = path_prefix
     end
   end
 end

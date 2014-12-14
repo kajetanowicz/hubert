@@ -67,21 +67,18 @@ module Hubert
           end
         end
 
-        context 'when host is specified' do
+        context 'when all path segments are specified' do
           before do
             example_class.class_eval do
-              host 'example.com'
+              https!; host 'example.com'; port 8080; path_prefix 'api'
+
               url 'some/:simple/path/:id', as: :get_items
             end
           end
 
           it 'returns a url' do
             expect(example_class.new.get_items_url(simple: 'foo', id: 'bar'))
-              .to eq('http://example.com/some/foo/path/bar') 
-          end
-
-          it 'uses path segments defined on class level' do
-
+              .to eq('https://example.com:8080/api/some/foo/path/bar')
           end
         end
       end
